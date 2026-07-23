@@ -7,6 +7,7 @@ export class UserService {
   deleteUser: (email: string) => Promise<void>;
   updatePassword: (email: string, newPassword: string) => Promise<void>;
   updateEmail: (email: string, newEmail: string) => Promise<void>;
+  findUser: (email: string) => Promise<IUser | null>;
 
   constructor() {
     this.createUser = async (userData) => {
@@ -16,31 +17,17 @@ export class UserService {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
       const newUserData = { ...userData, password: hashedPassword };
 
-      try {
-        const newUser = new userModel(newUserData);
-        await newUser.save();
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          throw new Error(`Failed to create user: ${error.message}`);
-        }
-        throw new Error(`Failed to create user: ${error}`);
-      }
+      const newUser = new userModel(newUserData);
+      await newUser.save();
     };
 
     this.deleteUser = async (email: string) => {
       if (!email) {
         throw new Error("Email is required to delete a user.");
       }
-      try {
-        const result = await userModel.deleteOne({ email });
-        if (result.deletedCount === 0) {
-          throw new Error("User not found.");
-        }
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          throw new Error(`Failed to delete user: ${error.message}`);
-        }
-        throw new Error(`Failed to delete user: ${error}`);
+      const result = await userModel.deleteOne({ email });
+      if (result.deletedCount === 0) {
+        throw new Error("User not found.");
       }
     };
 
@@ -50,20 +37,13 @@ export class UserService {
           "Email and new password are required to update a user.",
         );
       }
-      try {
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        const result = await userModel.updateOne(
-          { email },
-          { password: hashedPassword },
-        );
-        if (result.matchedCount === 0) {
-          throw new Error("User not found.");
-        }
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          throw new Error(`Failed to update user: ${error.message}`);
-        }
-        throw new Error(`Failed to update user: ${error}`);
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      const result = await userModel.updateOne(
+        { email },
+        { password: hashedPassword },
+      );
+      if (result.matchedCount === 0) {
+        throw new Error("User not found.");
       }
     };
 
@@ -71,20 +51,13 @@ export class UserService {
       if (!email || !newEmail) {
         throw new Error("Email and new email are required to update a user.");
       }
-      try {
-        const result = await userModel.updateOne(
-          { email },
-          { email: newEmail },
-        );
-        if (result.matchedCount === 0) {
-          throw new Error("User not found.");
-        }
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          throw new Error(`Failed to update user: ${error.message}`);
-        }
-        throw new Error(`Failed to update user: ${error}`);
+      const result = await userModel.updateOne({ email }, { email: newEmail });
+      if (result.matchedCount === 0) {
+        throw new Error("User not found.");
       }
+    };
+    this.findUser = async (email: string) => {
+      return userModel.findOne({ email });
     };
   }
 }

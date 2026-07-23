@@ -1,3 +1,5 @@
+import type { JwtPayload } from "jsonwebtoken";
+
 export interface CreateUserBody {
   email: string;
   password: string;
@@ -12,5 +14,8 @@ export interface UpdatePasswordBody {
 }
 
 export interface UserParams {
+  email: string;
+}
+export interface Payload extends JwtPayload {
   email: string;
 }
