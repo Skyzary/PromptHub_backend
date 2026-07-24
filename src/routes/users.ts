@@ -9,31 +9,15 @@ import protect from "../middleware/protect.ts";
 const userRouter: Router = Router();
 const userService = new UserService();
 
-function getEmailParam(params: Record<string, string | string[] | undefined>) {
-  const email = params.email;
-  return typeof email === "string" ? email : undefined;
-}
-
-userRouter.delete("/users/:email", protect, async (req, res) => {
-  const email = getEmailParam(req.params);
-  if (!email) {
-    return res
-      .status(400)
-      .json({ error: "Email is required to delete a user." });
-  }
-
+userRouter.delete("/", protect, async (req, res) => {
+  const email = req.user!.email;
   await userService.deleteUser(email);
+  res.clearCookie("refreshToken");
   return res.status(200).json({ message: "User deleted successfully." });
 });
 
-userRouter.put("/users/:email", protect, async (req, res) => {
-  const email = getEmailParam(req.params);
-  if (!email) {
-    return res
-      .status(400)
-      .json({ error: "Email is required to update a user." });
-  }
-
+userRouter.put("/email", protect, async (req, res) => {
+  const email = req.user!.email;
   const validation = updateEmailSchema.safeParse(req.body);
   if (!validation.success) {
     return res.status(400).json({ error: validation.error.message });
@@ -44,14 +28,8 @@ userRouter.put("/users/:email", protect, async (req, res) => {
   return res.status(200).json({ message: "User email updated successfully." });
 });
 
-userRouter.patch("/users/:email/password", protect, async (req, res) => {
-  const email = getEmailParam(req.params);
-  if (!email) {
-    return res
-      .status(400)
-      .json({ error: "Email is required to update a password." });
-  }
-
+userRouter.patch("/password", protect, async (req, res) => {
+  const email = req.user!.email;
   const validation = updatePasswordSchema.safeParse(req.body);
   if (!validation.success) {
     return res.status(400).json({ error: validation.error.message });
