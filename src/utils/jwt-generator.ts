@@ -30,10 +30,10 @@ export class JwtGenerator {
       return jwt.sign({ email }, refreshSecret, options);
     };
     this.verifyToken = async (token: string) => {
-      if (!accessSecret) {
+      if (!refreshSecret) {
         throw new Error("Missing access secret.");
       }
-      return jwt.verify(token, accessSecret);
+      return jwt.verify(token, refreshSecret);
     };
   }
 }
