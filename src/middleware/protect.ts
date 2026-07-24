@@ -1,7 +1,6 @@
 import {JwtGenerator} from "../utils/jwt-generator.ts";
 import { userModel } from "../models/user-model.ts";
 import type { Request, Response, NextFunction } from "express";
-import "../types/express.d.ts";
 const jwtGenerator = new JwtGenerator();
 export default async function protect(
   req: Request,
