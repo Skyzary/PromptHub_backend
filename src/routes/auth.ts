@@ -53,18 +53,20 @@ authRouter.post("/refresh", async (req, res) => {
   if (!refreshToken) {
     return res.status(401).json({ error: "Refresh token is required." });
   }
-  const payload = await jwtGenerator.verifyToken(refreshToken);
+  try {
+    const payload = (await jwtGenerator.verifyRefreshToken(
+      refreshToken,
+    )) as Payload;
 
-  if (
-    !payload ||
-    typeof payload !== "object" ||
-    !("email" in payload) ||
-    typeof (payload as Payload).email !== "string"
-  ) {
+    if (!payload?.email || typeof payload.email !== "string") {
+      return res.status(401).json({ error: "Invalid refresh token." });
+    }
+
+    const accessToken = await jwtGenerator.generateAccessToken(payload.email);
+    return res.status(200).json({ accessToken });
+  } catch {
     return res.status(401).json({ error: "Invalid refresh token." });
   }
-  const accessToken = await jwtGenerator.generateAccessToken(payload.email);
-  return res.status(200).json({ accessToken });
 });
 authRouter.post("/logout", async (req, res) => {
   res.clearCookie("refreshToken");
