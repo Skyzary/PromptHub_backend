@@ -1,40 +1,77 @@
 import { Router } from "express";
 import { PromptService } from "../services/prompt.services.ts";
-import type {
-  CreatePromptBody,
-  UpdatePromptTitle,
-  DeletePrompt,
-  UpdatePromptBody,
-  UpdatePromptTags,
-} from "../types/prompt.types.ts";
-import protect from "../middelware/protect.ts";
+import protect from "../middleware/protect.ts";
+import {
+  createPromptSchema,
+  updatePromptTitleSchema,
+  updatePromptBodySchema,
+  updatePromptTagsSchema,
+  deletePromptSchema,
+} from "../validation/prompt-validation.ts";
+
 const promptsRouter: Router = Router();
 const promptService = new PromptService();
+
 promptsRouter.post("/create", protect, async (req, res) => {
-  const { email, title, body, tags } = req.body as CreatePromptBody;
+  const email = req.user!.email;
+  const validation = createPromptSchema.safeParse(req.body);
+  if (!validation.success) {
+    return res.status(400).json({ error: validation.error.message });
+  }
+
+  const { title, body, tags } = validation.data;
   await promptService.createPrompt({ email, title, body, tags });
   return res.status(201).json({ message: "Prompt created successfully." });
 });
+
 promptsRouter.patch("/change/title", protect, async (req, res) => {
-  const { email, promptId, title } = req.body as UpdatePromptTitle;
+  const email = req.user!.email;
+  const validation = updatePromptTitleSchema.safeParse(req.body);
+  if (!validation.success) {
+    return res.status(400).json({ error: validation.error.message });
+  }
+
+  const { promptId, title } = validation.data;
   await promptService.updatePromptTitle({ email, promptId, title });
   return res
     .status(200)
     .json({ message: "Prompt title updated successfully." });
 });
+
 promptsRouter.delete("/delete", protect, async (req, res) => {
-  const { email, promptId } = req.body as DeletePrompt;
+  const email = req.user!.email;
+  const validation = deletePromptSchema.safeParse(req.body);
+  if (!validation.success) {
+    return res.status(400).json({ error: validation.error.message });
+  }
+
+  const { promptId } = validation.data;
   await promptService.deletePrompt({ email, promptId });
   return res.status(200).json({ message: "Prompt deleted successfully." });
 });
+
 promptsRouter.patch("/change/body", protect, async (req, res) => {
-  const { email, promptId, body } = req.body as UpdatePromptBody;
+  const email = req.user!.email;
+  const validation = updatePromptBodySchema.safeParse(req.body);
+  if (!validation.success) {
+    return res.status(400).json({ error: validation.error.message });
+  }
+
+  const { promptId, body } = validation.data;
   await promptService.updatePromptBody({ email, promptId, body });
   return res.status(200).json({ message: "Prompt body updated successfully." });
 });
+
 promptsRouter.patch("/change/tags", protect, async (req, res) => {
-  const { email, promptId, tags } = req.body as UpdatePromptTags;
+  const email = req.user!.email;
+  const validation = updatePromptTagsSchema.safeParse(req.body);
+  if (!validation.success) {
+    return res.status(400).json({ error: validation.error.message });
+  }
+
+  const { promptId, tags } = validation.data;
   await promptService.updatePromptTags({ email, promptId, tags });
   return res.status(200).json({ message: "Prompt tags updated successfully." });
 });
+
 export default promptsRouter;
