@@ -1,18 +1,5 @@
 import { Schema, model } from "mongoose";
-
-export interface IPrompt {
-  title: string;
-  body: string;
-  createdAt: Date;
-  tags: Array<string>;
-}
-
-export interface IUser {
-  email: string;
-  password: string;
-  registeredAt: Date;
-  prompts?: Array<IPrompt>;
-}
+import type { IUser } from "../types/user.types.ts";
 
 const userSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
