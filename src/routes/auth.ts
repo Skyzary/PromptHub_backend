@@ -3,7 +3,7 @@ import { UserService } from "../services/user.service.ts";
 import { JwtGenerator } from "../utils/jwt-generator.ts";
 import type { CreateUserBody, Payload } from "../types/user.types.ts";
 import { userSchema } from "../validation/user-validation.ts";
-import type { IUser } from "../models/user-model.ts";
+import type { IUser } from "../types/user.types.ts";
 import bcrypt from "bcrypt";
 
 const authRouter: Router = Router();

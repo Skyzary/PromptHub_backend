@@ -1,6 +1,6 @@
 import { userModel } from "../models/user-model.ts";
 import bcrypt from "bcrypt";
-import type { IUser } from "../models/user-model.ts";
+import type { IUser } from "../types/user.types.ts";
 
 export class UserService {
   createUser: (userData: IUser) => Promise<void>;
