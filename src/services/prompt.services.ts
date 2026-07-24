@@ -3,6 +3,7 @@ import type {
   UpdatePromptBody,
   UpdatePromptTitle,
   UpdatePromptTags,
+  DeletePrompt,
 } from "../types/prompt.types.ts";
 import { userModel } from "../models/user-model.ts";
 
@@ -13,6 +14,7 @@ export class PromptService {
   ) => Promise<void>; // Update the title of a prompt
   updatePromptBody: (updatePromptBodyBody: UpdatePromptBody) => Promise<void>; // Update the body of a prompt
   updatePromptTags: (updatePromptTagsBody: UpdatePromptTags) => Promise<void>; // Update the tags of a prompt
+  deletePrompt: (deletePromptBody: DeletePrompt) => Promise<void>; // Delete a prompt
   constructor() {
     this.createPrompt = async (createPromptData: CreatePromptBody) => {
       const { email, ...promptData } = createPromptData;
@@ -74,6 +76,22 @@ export class PromptService {
         throw new Error("Prompt not found.");
       }
       prompt.tags = tags;
+      await user.save();
+    };
+    this.deletePrompt = async (deletePromptData: DeletePrompt) => {
+      const { email, promptId } = deletePromptData;
+      if (!email || !promptId) {
+        throw new Error("Email and prompt ID are required.");
+      }
+      const user = await userModel.findOne({ email });
+      if (!user || !user.prompts) {
+        throw new Error("User or prompts not found.");
+      }
+      const prompt = user.prompts.find((p) => p._id?.toString() === promptId);
+      if (!prompt) {
+        throw new Error("Prompt not found.");
+      }
+      user.prompts = user.prompts.filter((p) => p._id?.toString() !== promptId);
       await user.save();
     };
   }

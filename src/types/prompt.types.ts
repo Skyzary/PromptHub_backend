@@ -20,7 +20,10 @@ export interface UpdatePromptTags {
   promptId: string;
   tags: Array<string>;
 }
-
+export interface DeletePrompt {
+  email: string;
+  promptId: string;
+}
 export interface IPrompt {
   _id?: Types.ObjectId; // появляется после сохранения, при create ещё нет
   title: string;
