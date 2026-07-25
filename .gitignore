@@ -1,8 +1,7 @@
 .env
-node_modules
-package-lock.json
-
-/pnpm-workspace.yaml
-/pnpm-lock.yaml
-/data/
+node_modules/data/
 /repomix-output.xml
+/node_modules/
+/data/
+/.idea/
+
