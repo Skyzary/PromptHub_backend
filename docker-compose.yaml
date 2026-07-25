@@ -1,13 +1,51 @@
+version: "3.8"
+
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prompthub_api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      MONGO_URL: mongodb://promptHub:promptHub@mongo:27017/promptHub?authSource=admin
+      ACCESS_SECRET: ${ACCESS_SECRET:-default_access_secret}
+      REFRESH_SECRET: ${REFRESH_SECRET:-default_refresh_secret}
+      ACCESS_EXPIRES: ${ACCESS_EXPIRES:-default_access_expires}
+      REFRESH_EXPIRES: ${REFRESH_EXPIRES:-default_refresh_expires}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - prompthub-network
+
   mongo:
     image: mongo:latest
     container_name: mongo
+    restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
-      - ./data:/data/db
-      - ./config:/etc/mongod.conf
+      - mongo-data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=promptHub
       - MONGO_INITDB_ROOT_PASSWORD=promptHub
       - MONGO_INITDB_DATABASE=promptHub
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - prompthub-network
+
+networks:
+  prompthub-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
