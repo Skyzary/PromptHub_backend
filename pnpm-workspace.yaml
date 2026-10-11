@@ -1,4 +1,7 @@
 allowBuilds:
+  '@parcel/watcher': true
   '@scarf/scarf': true
   bcrypt: true
   esbuild: set this to true or false
+  mongodb-memory-server: true
+  unrs-resolver: true
