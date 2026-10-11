@@ -5,7 +5,7 @@ const passwordSchema = z
   .min(8, "Password must be at least 8 characters long")
   .max(32, "Password must be at most 32 characters long")
   .regex(
-    /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/,
+    /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?]).+$/,
     "Password must contain at least one uppercase letter and one special character",
   );
 

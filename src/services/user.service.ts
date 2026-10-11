@@ -14,6 +14,10 @@ export class UserService {
       if (!userData.email || !userData.password) {
         throw new Error("Email and password are required to create a user.");
       }
+      const existingUser = await userModel.findOne({ email: userData.email });
+      if (existingUser) {
+        throw new Error("User already exists.");
+      }
       const hashedPassword = await bcrypt.hash(userData.password, 10);
       const newUserData = { ...userData, password: hashedPassword };
 

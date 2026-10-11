@@ -4,6 +4,8 @@ export interface CreatePromptBody {
   title: string;
   body: string;
   tags: Array<string>;
+  updatedAt?: Date;
+  createdAt?: Date;
 }
 export interface UpdatePromptTitle {
   email: string;
