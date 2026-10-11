@@ -11,6 +11,7 @@ const userSchema = new Schema<IUser>({
       body: { type: String, required: true },
       createdAt: { type: Date, required: true, default: Date.now },
       tags: { type: [{ type: String }], required: false },
+      updatedAt: { type: Date, required: true, default: Date.now },
     },
   ],
 });
