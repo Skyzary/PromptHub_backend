@@ -9,6 +9,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   check-and-test:
     name: Lint, Format, Typecheck & Test
@@ -16,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -31,11 +36,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Auto-format with Prettier
+        run: pnpm run prettier
+
+      - name: Commit and push formatted files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-format code with prettier"
+
       - name: Run linter
         run: pnpm run lint
-
-      - name: Check code formatting
-        run: pnpm run prettier:check
 
       - name: Run TypeScript typecheck
         run: pnpm run typecheck
