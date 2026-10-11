@@ -1,10 +1,6 @@
 import request from "supertest";
 import { createApp } from "../../src/app.ts";
-import {
-  connectTestDb,
-  clearTestDb,
-  closeTestDb,
-} from "../helpers/db.ts";
+import { connectTestDb, clearTestDb, closeTestDb } from "../helpers/db.ts";
 
 const app = createApp();
 
@@ -28,20 +24,19 @@ describe("Auth Routes (/api/auth)", () => {
 
   describe("POST /api/auth/register", () => {
     it("should register a new user successfully", async () => {
-      const res = await request(app)
-        .post("/api/auth/register")
-        .send(validUser);
+      const res = await request(app).post("/api/auth/register").send(validUser);
 
       expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty("message", "User registered successfully.");
+      expect(res.body).toHaveProperty(
+        "message",
+        "User registered successfully.",
+      );
     });
 
     it("should return 400 if user already exists", async () => {
       await request(app).post("/api/auth/register").send(validUser);
 
-      const res = await request(app)
-        .post("/api/auth/register")
-        .send(validUser);
+      const res = await request(app).post("/api/auth/register").send(validUser);
 
       expect(res.status).toBe(400);
       expect(res.body).toHaveProperty("error", "User already exists.");

@@ -1,11 +1,7 @@
 import request from "supertest";
 import { createApp } from "../../src/app.ts";
 import { userModel } from "../../src/models/user-model.ts";
-import {
-  connectTestDb,
-  clearTestDb,
-  closeTestDb,
-} from "../helpers/db.ts";
+import { connectTestDb, clearTestDb, closeTestDb } from "../helpers/db.ts";
 
 const app = createApp();
 
@@ -47,7 +43,10 @@ describe("Prompts Routes (/api/prompts)", () => {
         });
 
       expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty("message", "Prompt created successfully.");
+      expect(res.body).toHaveProperty(
+        "message",
+        "Prompt created successfully.",
+      );
 
       const updatedUser = await userModel.findOne({ email: user.email });
       expect(updatedUser?.prompts).toHaveLength(1);
@@ -55,11 +54,13 @@ describe("Prompts Routes (/api/prompts)", () => {
     });
 
     it("should return 401 when token is missing", async () => {
-      const res = await request(app).post("/api/prompts/create").send({
-        title: "My Prompt",
-        body: "Act as a software engineer...",
-        tags: ["tech"],
-      });
+      const res = await request(app)
+        .post("/api/prompts/create")
+        .send({
+          title: "My Prompt",
+          body: "Act as a software engineer...",
+          tags: ["tech"],
+        });
 
       expect(res.status).toBe(401);
     });
@@ -94,7 +95,10 @@ describe("Prompts Routes (/api/prompts)", () => {
         });
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("message", "Prompt title updated successfully.");
+      expect(res.body).toHaveProperty(
+        "message",
+        "Prompt title updated successfully.",
+      );
 
       const dbUser = await userModel.findOne({ email: user.email });
       expect(dbUser?.prompts?.[0]?.title).toBe("Updated Title");
@@ -110,7 +114,10 @@ describe("Prompts Routes (/api/prompts)", () => {
         });
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("message", "Prompt body updated successfully.");
+      expect(res.body).toHaveProperty(
+        "message",
+        "Prompt body updated successfully.",
+      );
 
       const dbUser = await userModel.findOne({ email: user.email });
       expect(dbUser?.prompts?.[0]?.body).toBe("Updated Body Content");
@@ -126,7 +133,10 @@ describe("Prompts Routes (/api/prompts)", () => {
         });
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("message", "Prompt tags updated successfully.");
+      expect(res.body).toHaveProperty(
+        "message",
+        "Prompt tags updated successfully.",
+      );
 
       const dbUser = await userModel.findOne({ email: user.email });
       expect(dbUser?.prompts?.[0]?.tags).toEqual(["new-tag", "updated"]);
@@ -141,7 +151,10 @@ describe("Prompts Routes (/api/prompts)", () => {
         });
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("message", "Prompt deleted successfully.");
+      expect(res.body).toHaveProperty(
+        "message",
+        "Prompt deleted successfully.",
+      );
 
       const dbUser = await userModel.findOne({ email: user.email });
       expect(dbUser?.prompts).toHaveLength(0);

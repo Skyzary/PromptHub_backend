@@ -1,10 +1,6 @@
 import request from "supertest";
 import { createApp } from "../../src/app.ts";
-import {
-  connectTestDb,
-  clearTestDb,
-  closeTestDb,
-} from "../helpers/db.ts";
+import { connectTestDb, clearTestDb, closeTestDb } from "../helpers/db.ts";
 
 const app = createApp();
 
@@ -41,7 +37,10 @@ describe("Users Routes (/api/users)", () => {
         .send({ newEmail: "updated@example.com" });
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("message", "User email updated successfully.");
+      expect(res.body).toHaveProperty(
+        "message",
+        "User email updated successfully.",
+      );
     });
 
     it("should return 401 if unauthorized", async () => {
@@ -62,7 +61,10 @@ describe("Users Routes (/api/users)", () => {
         .send({ newPassword: "NewPassword2@" });
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("message", "User password updated successfully.");
+      expect(res.body).toHaveProperty(
+        "message",
+        "User password updated successfully.",
+      );
     });
   });
 

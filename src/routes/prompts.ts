@@ -24,7 +24,9 @@ promptsRouter.post("/create", protect, async (req, res) => {
     await promptService.createPrompt({ email, title, body, tags });
     return res.status(201).json({ message: "Prompt created successfully." });
   } catch (error: any) {
-    return res.status(400).json({ error: error.message || "Failed to create prompt" });
+    return res
+      .status(400)
+      .json({ error: error.message || "Failed to create prompt" });
   }
 });
 
@@ -43,7 +45,9 @@ promptsRouter.patch("/change/title", protect, async (req, res) => {
       .json({ message: "Prompt title updated successfully." });
   } catch (error: any) {
     const status = error.message === "Prompt not found." ? 404 : 400;
-    return res.status(status).json({ error: error.message || "Failed to update prompt title" });
+    return res
+      .status(status)
+      .json({ error: error.message || "Failed to update prompt title" });
   }
 });
 
@@ -60,7 +64,9 @@ promptsRouter.delete("/delete", protect, async (req, res) => {
     return res.status(200).json({ message: "Prompt deleted successfully." });
   } catch (error: any) {
     const status = error.message === "Prompt not found." ? 404 : 400;
-    return res.status(status).json({ error: error.message || "Failed to delete prompt" });
+    return res
+      .status(status)
+      .json({ error: error.message || "Failed to delete prompt" });
   }
 });
 
@@ -74,10 +80,14 @@ promptsRouter.patch("/change/body", protect, async (req, res) => {
 
     const { promptId, body } = validation.data;
     await promptService.updatePromptBody({ email, promptId, body });
-    return res.status(200).json({ message: "Prompt body updated successfully." });
+    return res
+      .status(200)
+      .json({ message: "Prompt body updated successfully." });
   } catch (error: any) {
     const status = error.message === "Prompt not found." ? 404 : 400;
-    return res.status(status).json({ error: error.message || "Failed to update prompt body" });
+    return res
+      .status(status)
+      .json({ error: error.message || "Failed to update prompt body" });
   }
 });
 
@@ -91,10 +101,14 @@ promptsRouter.patch("/change/tags", protect, async (req, res) => {
 
     const { promptId, tags } = validation.data;
     await promptService.updatePromptTags({ email, promptId, tags });
-    return res.status(200).json({ message: "Prompt tags updated successfully." });
+    return res
+      .status(200)
+      .json({ message: "Prompt tags updated successfully." });
   } catch (error: any) {
     const status = error.message === "Prompt not found." ? 404 : 400;
-    return res.status(status).json({ error: error.message || "Failed to update prompt tags" });
+    return res
+      .status(status)
+      .json({ error: error.message || "Failed to update prompt tags" });
   }
 });
 

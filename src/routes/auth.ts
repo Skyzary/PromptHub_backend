@@ -22,7 +22,9 @@ authRouter.post("/register", async (req, res) => {
     await userService.createUser({ email, password } as IUser);
     return res.status(201).json({ message: "User registered successfully." });
   } catch (error: any) {
-    return res.status(400).json({ error: error.message || "Registration failed" });
+    return res
+      .status(400)
+      .json({ error: error.message || "Registration failed" });
   }
 });
 
@@ -34,7 +36,9 @@ authRouter.post("/login", async (req, res) => {
       return res.status(400).json({ error: validation.error.message });
     }
     if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required." });
+      return res
+        .status(400)
+        .json({ error: "Email and password are required." });
     }
     const user = await userService.findUser(email);
     if (!user) {
@@ -75,7 +79,9 @@ authRouter.post("/refresh", async (req, res) => {
     const accessToken = await jwtGenerator.generateAccessToken(payload.email);
     return res.status(200).json({ accessToken });
   } catch (error: any) {
-    return res.status(401).json({ error: error.message || "Invalid refresh token." });
+    return res
+      .status(401)
+      .json({ error: error.message || "Invalid refresh token." });
   }
 });
 
