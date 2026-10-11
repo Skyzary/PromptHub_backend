@@ -9,7 +9,7 @@ import authRouter from "./routes/auth.ts";
 import swaggerUi from "swagger-ui-express";
 import { swaggerDocument } from "./swagger.ts";
 
-export const createApp = () => {
+export const createApp = (): express.Express => {
   const app = express();
   app.use(express.json());
   app.use(cookieParser());
@@ -28,15 +28,17 @@ export const createApp = () => {
   // Global Error Handler
   app.use(
     (
-      err: any,
+      err: unknown,
       _req: express.Request,
       res: express.Response,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       _next: express.NextFunction,
     ) => {
-      logger.error(err.stack || err.message);
-      const status = err.status || err.statusCode || 500;
+      const error = err as { message?: string; stack?: string; status?: number; statusCode?: number };
+      logger.error(error.stack || error.message);
+      const status = error.status || error.statusCode || 500;
       res.status(status).json({
-        error: err.message || "Internal Server Error",
+        error: error.message || "Internal Server Error",
       });
     },
   );

@@ -21,10 +21,9 @@ authRouter.post("/register", async (req, res) => {
 
     await userService.createUser({ email, password } as IUser);
     return res.status(201).json({ message: "User registered successfully." });
-  } catch (error: any) {
-    return res
-      .status(400)
-      .json({ error: error.message || "Registration failed" });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Registration failed";
+    return res.status(400).json({ error: message });
   }
 });
 
@@ -57,8 +56,9 @@ authRouter.post("/login", async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(200).json({ accessToken, refreshToken });
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message || "Login failed" });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Login failed";
+    return res.status(500).json({ error: message });
   }
 });
 
@@ -78,10 +78,10 @@ authRouter.post("/refresh", async (req, res) => {
 
     const accessToken = await jwtGenerator.generateAccessToken(payload.email);
     return res.status(200).json({ accessToken });
-  } catch (error: any) {
-    return res
-      .status(401)
-      .json({ error: error.message || "Invalid refresh token." });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Invalid refresh token.";
+    return res.status(401).json({ error: message });
   }
 });
 
@@ -89,8 +89,9 @@ authRouter.post("/logout", async (req, res) => {
   try {
     res.clearCookie("refreshToken");
     return res.status(200).json({ message: "Logout successful." });
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message || "Logout failed" });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Logout failed";
+    return res.status(500).json({ error: message });
   }
 });
 export default authRouter;

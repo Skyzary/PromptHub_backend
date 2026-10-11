@@ -23,10 +23,10 @@ promptsRouter.post("/create", protect, async (req, res) => {
     const { title, body, tags } = validation.data;
     await promptService.createPrompt({ email, title, body, tags });
     return res.status(201).json({ message: "Prompt created successfully." });
-  } catch (error: any) {
-    return res
-      .status(400)
-      .json({ error: error.message || "Failed to create prompt" });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to create prompt";
+    return res.status(400).json({ error: message });
   }
 });
 
@@ -43,11 +43,11 @@ promptsRouter.patch("/change/title", protect, async (req, res) => {
     return res
       .status(200)
       .json({ message: "Prompt title updated successfully." });
-  } catch (error: any) {
-    const status = error.message === "Prompt not found." ? 404 : 400;
-    return res
-      .status(status)
-      .json({ error: error.message || "Failed to update prompt title" });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to update prompt title";
+    const status = message === "Prompt not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
   }
 });
 
@@ -62,11 +62,11 @@ promptsRouter.delete("/delete", protect, async (req, res) => {
     const { promptId } = validation.data;
     await promptService.deletePrompt({ email, promptId });
     return res.status(200).json({ message: "Prompt deleted successfully." });
-  } catch (error: any) {
-    const status = error.message === "Prompt not found." ? 404 : 400;
-    return res
-      .status(status)
-      .json({ error: error.message || "Failed to delete prompt" });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to delete prompt";
+    const status = message === "Prompt not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
   }
 });
 
@@ -83,11 +83,11 @@ promptsRouter.patch("/change/body", protect, async (req, res) => {
     return res
       .status(200)
       .json({ message: "Prompt body updated successfully." });
-  } catch (error: any) {
-    const status = error.message === "Prompt not found." ? 404 : 400;
-    return res
-      .status(status)
-      .json({ error: error.message || "Failed to update prompt body" });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to update prompt body";
+    const status = message === "Prompt not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
   }
 });
 
@@ -104,11 +104,11 @@ promptsRouter.patch("/change/tags", protect, async (req, res) => {
     return res
       .status(200)
       .json({ message: "Prompt tags updated successfully." });
-  } catch (error: any) {
-    const status = error.message === "Prompt not found." ? 404 : 400;
-    return res
-      .status(status)
-      .json({ error: error.message || "Failed to update prompt tags" });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to update prompt tags";
+    const status = message === "Prompt not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
   }
 });
 

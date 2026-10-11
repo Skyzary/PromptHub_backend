@@ -15,11 +15,11 @@ userRouter.delete("/", protect, async (req, res) => {
     await userService.deleteUser(email);
     res.clearCookie("refreshToken");
     return res.status(200).json({ message: "User deleted successfully." });
-  } catch (error: any) {
-    const status = error.message === "User not found." ? 404 : 400;
-    return res
-      .status(status)
-      .json({ error: error.message || "Delete user failed" });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Delete user failed";
+    const status = message === "User not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
   }
 });
 
@@ -36,11 +36,11 @@ userRouter.put("/email", protect, async (req, res) => {
     return res
       .status(200)
       .json({ message: "User email updated successfully." });
-  } catch (error: any) {
-    const status = error.message === "User not found." ? 404 : 400;
-    return res
-      .status(status)
-      .json({ error: error.message || "Update email failed" });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Update email failed";
+    const status = message === "User not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
   }
 });
 
@@ -57,11 +57,11 @@ userRouter.patch("/password", protect, async (req, res) => {
     return res
       .status(200)
       .json({ message: "User password updated successfully." });
-  } catch (error: any) {
-    const status = error.message === "User not found." ? 404 : 400;
-    return res
-      .status(status)
-      .json({ error: error.message || "Update password failed" });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Update password failed";
+    const status = message === "User not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
   }
 });
 
