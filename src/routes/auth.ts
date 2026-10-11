@@ -22,7 +22,8 @@ authRouter.post("/register", async (req, res) => {
     await userService.createUser({ email, password } as IUser);
     return res.status(201).json({ message: "User registered successfully." });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Registration failed";
+    const message =
+      error instanceof Error ? error.message : "Registration failed";
     return res.status(400).json({ error: message });
   }
 });

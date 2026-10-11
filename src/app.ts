@@ -34,7 +34,12 @@ export const createApp = (): express.Express => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       _next: express.NextFunction,
     ) => {
-      const error = err as { message?: string; stack?: string; status?: number; statusCode?: number };
+      const error = err as {
+        message?: string;
+        stack?: string;
+        status?: number;
+        statusCode?: number;
+      };
       logger.error(error.stack || error.message);
       const status = error.status || error.statusCode || 500;
       res.status(status).json({
