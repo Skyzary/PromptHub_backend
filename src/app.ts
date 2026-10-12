@@ -13,7 +13,26 @@ export const createApp = (): express.Express => {
   const app = express();
   app.use(express.json());
   app.use(cookieParser());
-  app.use(cors());
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        // Разрешаем запросы без Origin (background scripts, Postman, curl)
+        // или запросы от chrome-extension:// и localhost
+        if (
+          !origin ||
+          origin.startsWith("chrome-extension://") ||
+          /^http:\/\/localhost:\d+$/.test(origin)
+        ) {
+          callback(null, true);
+        } else {
+          callback(new Error(`Origin ${origin} not allowed by CORS`));
+        }
+      },
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+  );
   app.use(httpLogger);
   app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.use("/api/users", usersRouter);
