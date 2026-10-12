@@ -9,6 +9,33 @@ import protect from "../middleware/protect.ts";
 const userRouter: Router = Router();
 const userService = new UserService();
 
+userRouter.get("/", protect, async (_req, res) => {
+  try {
+    const users = await userService.getUsers();
+    return res.status(200).json({ users });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch users";
+    return res.status(500).json({ error: message });
+  }
+});
+
+userRouter.get("/:email", protect, async (req, res) => {
+  try {
+    const email = req.params.email;
+    if (typeof email !== "string") {
+      return res.status(400).json({ error: "Email parameter is required." });
+    }
+    const user = await userService.getUserByEmail(email);
+    return res.status(200).json({ user });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch user";
+    const status = message === "User not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
+  }
+});
+
 userRouter.delete("/", protect, async (req, res) => {
   try {
     const email = req.user!.email;
