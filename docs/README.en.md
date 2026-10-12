@@ -5,6 +5,7 @@ Backend service for the **PromptHub** platform, providing a REST API for user ma
 ---
 
 ## 📌 Table of Contents
+
 - [Tech Stack](#-tech-stack)
 - [Requirements](#-requirements)
 - [Environment Variables](#-environment-variables)
@@ -54,14 +55,14 @@ ACCESS_EXPIRES=15m
 REFRESH_EXPIRES=7d
 ```
 
-| Variable | Description | Default |
-|---|---|---|
-| `PORT` | Port the server listens on | `4300` |
-| `MONGO_URL` | MongoDB connection URI | — |
-| `ACCESS_SECRET` | Secret key for signing Access JWTs | — |
-| `REFRESH_SECRET` | Secret key for signing Refresh JWTs | — |
-| `ACCESS_EXPIRES` | Lifespan of Access token (e.g., `15m`) | `15m` |
-| `REFRESH_EXPIRES` | Lifespan of Refresh token (e.g., `7d`) | `7d` |
+| Variable          | Description                            | Default |
+| ----------------- | -------------------------------------- | ------- |
+| `PORT`            | Port the server listens on             | `4300`  |
+| `MONGO_URL`       | MongoDB connection URI                 | —       |
+| `ACCESS_SECRET`   | Secret key for signing Access JWTs     | —       |
+| `REFRESH_SECRET`  | Secret key for signing Refresh JWTs    | —       |
+| `ACCESS_EXPIRES`  | Lifespan of Access token (e.g., `15m`) | `15m`   |
+| `REFRESH_EXPIRES` | Lifespan of Refresh token (e.g., `7d`) | `7d`    |
 
 ---
 
@@ -70,27 +71,32 @@ REFRESH_EXPIRES=7d
 ### Local Development
 
 1. **Clone the repository:**
+
    ```bash
    git clone <repo-url>
    cd PromptHub_backend
    ```
 
 2. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
 
 3. **Configure environment variables:**
+
    ```bash
    cp .env.example .env # or create .env manually
    ```
 
 4. **Start MongoDB** (e.g., with docker-compose):
+
    ```bash
    docker compose up -d mongodb
    ```
 
 5. **Start development server:**
+
    ```bash
    pnpm run dev
    ```
@@ -116,16 +122,16 @@ The application will be accessible at: `http://localhost:4300`
 
 ## 📜 Available Scripts
 
-| Command | Description |
-|---|---|
-| `pnpm run dev` | Start development server with hot-reload (`nodemon` + `tsx`) |
-| `pnpm run start` | Compile TypeScript (`tsc src/index.ts`) |
-| `pnpm run test` | Run test suite with Jest |
-| `pnpm run lint` | Check code with ESLint |
-| `pnpm run lint:fix` | Fix auto-fixable ESLint issues |
-| `pnpm run prettier` | Format codebase using Prettier |
-| `pnpm run prettier:check` | Check code formatting |
-| `pnpm run typecheck` | Run TypeScript type checks without emitting build files |
+| Command                   | Description                                                  |
+| ------------------------- | ------------------------------------------------------------ |
+| `pnpm run dev`            | Start development server with hot-reload (`nodemon` + `tsx`) |
+| `pnpm run start`          | Compile TypeScript (`tsc src/index.ts`)                      |
+| `pnpm run test`           | Run test suite with Jest                                     |
+| `pnpm run lint`           | Check code with ESLint                                       |
+| `pnpm run lint:fix`       | Fix auto-fixable ESLint issues                               |
+| `pnpm run prettier`       | Format codebase using Prettier                               |
+| `pnpm run prettier:check` | Check code formatting                                        |
+| `pnpm run typecheck`      | Run TypeScript type checks without emitting build files      |
 
 ---
 
@@ -161,6 +167,7 @@ Once the server is running, explore the interactive Swagger UI at:
 👉 **[http://localhost:4300/api/docs](http://localhost:4300/api/docs)**
 
 ### Key Endpoints:
+
 - **Authentication (`/api/auth`)**:
   - `POST /api/auth/register` — Register a new user
   - `POST /api/auth/login` — Authenticate user and issue tokens

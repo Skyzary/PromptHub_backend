@@ -5,6 +5,7 @@ Service backend pour la plateforme **PromptHub**, fournissant une API REST pour 
 ---
 
 ## 📌 Table des matières
+
 - [Stack technique](#-stack-technique)
 - [Prérequis](#-prérequis)
 - [Variables d'environnement](#-variables-denvironnement)
@@ -54,14 +55,14 @@ ACCESS_EXPIRES=15m
 REFRESH_EXPIRES=7d
 ```
 
-| Variable | Description | Valeur par défaut |
-|---|---|---|
-| `PORT` | Port d'écoute du serveur | `4300` |
-| `MONGO_URL` | Chaîne de connexion à MongoDB | — |
-| `ACCESS_SECRET` | Clé secrète pour signer le token Access | — |
-| `REFRESH_SECRET` | Clé secrète pour signer le token Refresh | — |
-| `ACCESS_EXPIRES` | Durée de validité du token Access (ex. `15m`) | `15m` |
-| `REFRESH_EXPIRES` | Durée de validité du token Refresh (ex. `7d`) | `7d` |
+| Variable          | Description                                   | Valeur par défaut |
+| ----------------- | --------------------------------------------- | ----------------- |
+| `PORT`            | Port d'écoute du serveur                      | `4300`            |
+| `MONGO_URL`       | Chaîne de connexion à MongoDB                 | —                 |
+| `ACCESS_SECRET`   | Clé secrète pour signer le token Access       | —                 |
+| `REFRESH_SECRET`  | Clé secrète pour signer le token Refresh      | —                 |
+| `ACCESS_EXPIRES`  | Durée de validité du token Access (ex. `15m`) | `15m`             |
+| `REFRESH_EXPIRES` | Durée de validité du token Refresh (ex. `7d`) | `7d`              |
 
 ---
 
@@ -70,27 +71,32 @@ REFRESH_EXPIRES=7d
 ### Exécution en local
 
 1. **Cloner le dépôt :**
+
    ```bash
    git clone <url-du-depot>
    cd PromptHub_backend
    ```
 
 2. **Installer les dépendances :**
+
    ```bash
    pnpm install
    ```
 
 3. **Configurer les variables d'environnement :**
+
    ```bash
    cp .env.example .env # ou créez le fichier .env manuellement
    ```
 
 4. **Démarrer MongoDB** (par exemple avec docker-compose) :
+
    ```bash
    docker compose up -d mongodb
    ```
 
 5. **Lancer le serveur en mode développement :**
+
    ```bash
    pnpm run dev
    ```
@@ -116,16 +122,16 @@ Le serveur sera accessible sur : `http://localhost:4300`
 
 ## 📜 Scripts disponibles
 
-| Commande | Description |
-|---|---|
-| `pnpm run dev` | Démarre le serveur de développement avec rechargement à chaud (`nodemon` + `tsx`) |
-| `pnpm run start` | Compile TypeScript (`tsc src/index.ts`) |
-| `pnpm run test` | Exécute la suite de tests avec Jest |
-| `pnpm run lint` | Analyse le code avec ESLint |
-| `pnpm run lint:fix` | Corrige automatiquement les erreurs ESLint |
-| `pnpm run prettier` | Formate le code avec Prettier |
-| `pnpm run prettier:check` | Vérifie le formatage du code |
-| `pnpm run typecheck` | Vérifie les types TypeScript sans générer de fichiers compilés |
+| Commande                  | Description                                                                       |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| `pnpm run dev`            | Démarre le serveur de développement avec rechargement à chaud (`nodemon` + `tsx`) |
+| `pnpm run start`          | Compile TypeScript (`tsc src/index.ts`)                                           |
+| `pnpm run test`           | Exécute la suite de tests avec Jest                                               |
+| `pnpm run lint`           | Analyse le code avec ESLint                                                       |
+| `pnpm run lint:fix`       | Corrige automatiquement les erreurs ESLint                                        |
+| `pnpm run prettier`       | Formate le code avec Prettier                                                     |
+| `pnpm run prettier:check` | Vérifie le formatage du code                                                      |
+| `pnpm run typecheck`      | Vérifie les types TypeScript sans générer de fichiers compilés                    |
 
 ---
 
@@ -161,6 +167,7 @@ Une fois le serveur lancé, accédez à la documentation interactive Swagger UI 
 👉 **[http://localhost:4300/api/docs](http://localhost:4300/api/docs)**
 
 ### Principaux points de terminaison :
+
 - **Authentification (`/api/auth`) :**
   - `POST /api/auth/register` — Inscription d'un nouvel utilisateur
   - `POST /api/auth/login` — Connexion et obtention des tokens

@@ -5,6 +5,7 @@
 ---
 
 ## 📌 Содержание
+
 - [Технологический стек](#-технологический-стек)
 - [Требования](#-требования)
 - [Переменные окружения](#-переменные-окружения)
@@ -54,14 +55,14 @@ ACCESS_EXPIRES=15m
 REFRESH_EXPIRES=7d
 ```
 
-| Переменная | Описание | По умолчанию |
-|---|---|---|
-| `PORT` | Порт, на котором запускается сервер | `4300` |
-| `MONGO_URL` | Строка подключения к MongoDB | — |
-| `ACCESS_SECRET` | Секретный ключ для подписи Access токена | — |
-| `REFRESH_SECRET` | Секретный ключ для подписи Refresh токена | — |
-| `ACCESS_EXPIRES` | Срок действия Access токена (например, `15m`) | `15m` |
-| `REFRESH_EXPIRES` | Срок действия Refresh токена (например, `7d`) | `7d` |
+| Переменная        | Описание                                      | По умолчанию |
+| ----------------- | --------------------------------------------- | ------------ |
+| `PORT`            | Порт, на котором запускается сервер           | `4300`       |
+| `MONGO_URL`       | Строка подключения к MongoDB                  | —            |
+| `ACCESS_SECRET`   | Секретный ключ для подписи Access токена      | —            |
+| `REFRESH_SECRET`  | Секретный ключ для подписи Refresh токена     | —            |
+| `ACCESS_EXPIRES`  | Срок действия Access токена (например, `15m`) | `15m`        |
+| `REFRESH_EXPIRES` | Срок действия Refresh токена (например, `7d`) | `7d`         |
 
 ---
 
@@ -70,27 +71,32 @@ REFRESH_EXPIRES=7d
 ### Локальный запуск
 
 1. **Клонируйте репозиторий:**
+
    ```bash
    git clone <url-репозитория>
    cd PromptHub_backend
    ```
 
 2. **Установите зависимости:**
+
    ```bash
    pnpm install
    ```
 
 3. **Настройте переменные окружения:**
+
    ```bash
    cp .env.example .env # или создайте .env вручную
    ```
 
 4. **Запустите MongoDB** (например, через docker-compose):
+
    ```bash
    docker compose up -d mongodb
    ```
 
 5. **Запустите сервер в режиме разработки:**
+
    ```bash
    pnpm run dev
    ```
@@ -116,16 +122,16 @@ docker compose up --build -d
 
 ## 📜 Доступные скрипты
 
-| Команда | Описание |
-|---|---|
-| `pnpm run dev` | Запуск сервера для разработки с автоперезагрузкой (`nodemon` + `tsx`) |
-| `pnpm run start` | Компиляция TypeScript (`tsc src/index.ts`) |
-| `pnpm run test` | Запуск тестов через Jest |
-| `pnpm run lint` | Проверка кода линтером ESLint |
-| `pnpm run lint:fix` | Автоматическое исправление ошибок ESLint |
-| `pnpm run prettier` | Форматирование кода с помощью Prettier |
-| `pnpm run prettier:check` | Проверка форматирования кода |
-| `pnpm run typecheck` | Проверка типов TypeScript без сборки файлов |
+| Команда                   | Описание                                                              |
+| ------------------------- | --------------------------------------------------------------------- |
+| `pnpm run dev`            | Запуск сервера для разработки с автоперезагрузкой (`nodemon` + `tsx`) |
+| `pnpm run start`          | Компиляция TypeScript (`tsc src/index.ts`)                            |
+| `pnpm run test`           | Запуск тестов через Jest                                              |
+| `pnpm run lint`           | Проверка кода линтером ESLint                                         |
+| `pnpm run lint:fix`       | Автоматическое исправление ошибок ESLint                              |
+| `pnpm run prettier`       | Форматирование кода с помощью Prettier                                |
+| `pnpm run prettier:check` | Проверка форматирования кода                                          |
+| `pnpm run typecheck`      | Проверка типов TypeScript без сборки файлов                           |
 
 ---
 
@@ -161,6 +167,7 @@ PromptHub_backend/
 👉 **[http://localhost:4300/api/docs](http://localhost:4300/api/docs)**
 
 ### Основные эндпоинты:
+
 - **Аутентификация (`/api/auth`)**:
   - `POST /api/auth/register` — Регистрация нового пользователя
   - `POST /api/auth/login` — Вход в систему и получение токенов
