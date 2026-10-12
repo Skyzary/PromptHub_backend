@@ -8,6 +8,8 @@ export class UserService {
   updatePassword: (email: string, newPassword: string) => Promise<void>;
   updateEmail: (email: string, newEmail: string) => Promise<void>;
   findUser: (email: string) => Promise<IUser | null>;
+  getUsers: () => Promise<Omit<IUser, "password">[]>;
+  getUserByEmail: (email: string) => Promise<Omit<IUser, "password">>;
 
   constructor() {
     this.createUser = async (userData) => {
@@ -62,6 +64,21 @@ export class UserService {
     };
     this.findUser = async (email: string) => {
       return userModel.findOne({ email });
+    };
+
+    this.getUsers = async () => {
+      return userModel.find({}, "-password");
+    };
+
+    this.getUserByEmail = async (email: string) => {
+      if (!email) {
+        throw new Error("Email is required.");
+      }
+      const user = await userModel.findOne({ email }, "-password");
+      if (!user) {
+        throw new Error("User not found.");
+      }
+      return user;
     };
   }
 }

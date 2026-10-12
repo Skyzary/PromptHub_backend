@@ -126,6 +126,50 @@ export const swaggerDocument = {
           },
         },
       },
+      UserItem: {
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+            example: "66a26d708309cf8fcf650b2a",
+          },
+          email: {
+            type: "string",
+            format: "email",
+            example: "user@example.com",
+          },
+          registeredAt: {
+            type: "string",
+            format: "date-time",
+            example: "2026-07-24T12:00:00.000Z",
+          },
+          prompts: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/PromptItem",
+            },
+          },
+        },
+      },
+      UserResponse: {
+        type: "object",
+        properties: {
+          user: {
+            $ref: "#/components/schemas/UserItem",
+          },
+        },
+      },
+      UsersListResponse: {
+        type: "object",
+        properties: {
+          users: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/UserItem",
+            },
+          },
+        },
+      },
       PromptCreateRequest: {
         type: "object",
         required: ["title", "body", "tags"],
@@ -380,6 +424,37 @@ export const swaggerDocument = {
       },
     },
     "/api/users": {
+      get: {
+        tags: ["Users"],
+        summary: "Получение списка всех пользователей",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        responses: {
+          200: {
+            description: "Список пользователей успешно получен",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UsersListResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
       delete: {
         tags: ["Users"],
         summary: "Удаление текущего пользователя",
@@ -507,6 +582,62 @@ export const swaggerDocument = {
           },
           401: {
             description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/users/{email}": {
+      get: {
+        tags: ["Users"],
+        summary: "Получение конкретного пользователя по email",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        parameters: [
+          {
+            name: "email",
+            in: "path",
+            required: true,
+            description: "Email пользователя",
+            schema: {
+              type: "string",
+              format: "email",
+              example: "user@example.com",
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: "Пользователь успешно получен",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UserResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          404: {
+            description: "Пользователь не найден",
             content: {
               "application/json": {
                 schema: {
