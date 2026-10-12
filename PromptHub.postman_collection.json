@@ -228,6 +228,20 @@
       },
       "item": [
         {
+          "name": "Get Prompts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/prompts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prompts"]
+            },
+            "description": "Получение всех промптов текущего пользователя. Требует Authorization: Bearer {{accessToken}}."
+          },
+          "response": []
+        },
+        {
           "name": "Create Prompt",
           "request": {
             "method": "POST",

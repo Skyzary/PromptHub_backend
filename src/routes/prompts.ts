@@ -12,6 +12,18 @@ import {
 const promptsRouter: Router = Router();
 const promptService = new PromptService();
 
+promptsRouter.get("/", protect, async (req, res) => {
+  try {
+    const email = req.user!.email;
+    const prompts = await promptService.getPrompts(email);
+    return res.status(200).json({ prompts });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch prompts";
+    return res.status(400).json({ error: message });
+  }
+});
+
 promptsRouter.post("/create", protect, async (req, res) => {
   try {
     const email = req.user!.email;

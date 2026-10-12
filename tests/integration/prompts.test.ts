@@ -29,6 +29,41 @@ describe("Prompts Routes (/api/prompts)", () => {
     return loginRes.body.accessToken;
   };
 
+  describe("GET /api/prompts", () => {
+    it("should return prompts for authenticated user", async () => {
+      const token = await getAuthToken();
+
+      // Create a prompt first
+      await request(app)
+        .post("/api/prompts/create")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "My Prompt",
+          body: "Act as a software engineer...",
+          tags: ["tech", "coding"],
+        });
+
+      const res = await request(app)
+        .get("/api/prompts")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("prompts");
+      expect(res.body.prompts).toHaveLength(1);
+      expect(res.body.prompts[0]).toHaveProperty("title", "My Prompt");
+      expect(res.body.prompts[0]).toHaveProperty(
+        "body",
+        "Act as a software engineer...",
+      );
+      expect(res.body.prompts[0].tags).toEqual(["tech", "coding"]);
+    });
+
+    it("should return 401 when token is missing", async () => {
+      const res = await request(app).get("/api/prompts");
+      expect(res.status).toBe(401);
+    });
+  });
+
   describe("POST /api/prompts/create", () => {
     it("should create a prompt for authenticated user", async () => {
       const token = await getAuthToken();

@@ -4,10 +4,12 @@ import type {
   UpdatePromptTitle,
   UpdatePromptTags,
   DeletePrompt,
+  IPrompt,
 } from "../types/prompt.types.ts";
 import { userModel } from "../models/user-model.ts";
 
 export class PromptService {
+  getPrompts: (email: string) => Promise<IPrompt[]>;
   createPrompt: (promptData: CreatePromptBody) => Promise<void>; // Create a new prompt
   updatePromptTitle: (
     updatePromptTitleBody: UpdatePromptTitle,
@@ -16,6 +18,16 @@ export class PromptService {
   updatePromptTags: (updatePromptTagsBody: UpdatePromptTags) => Promise<void>; // Update the tags of a prompt
   deletePrompt: (deletePromptBody: DeletePrompt) => Promise<void>; // Delete a prompt
   constructor() {
+    this.getPrompts = async (email: string) => {
+      if (!email) {
+        throw new Error("Email is required.");
+      }
+      const user = await userModel.findOne({ email });
+      if (!user) {
+        throw new Error("User not found.");
+      }
+      return user.prompts ?? [];
+    };
     this.createPrompt = async (createPromptData: CreatePromptBody) => {
       const { email, ...promptData } = createPromptData;
       if (!email || !promptData) {
