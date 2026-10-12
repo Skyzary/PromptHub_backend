@@ -8,9 +8,9 @@ services:
     container_name: prompthub_api
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "4300:4300"
     environment:
-      PORT: 3000
+      PORT: 4300
       MONGO_URL: mongodb://promptHub:promptHub@mongo:27017/promptHub?authSource=admin
       ACCESS_SECRET: ${ACCESS_SECRET:-default_access_secret}
       REFRESH_SECRET: ${REFRESH_SECRET:-default_refresh_secret}
