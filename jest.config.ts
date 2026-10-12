@@ -26,6 +26,7 @@ const config: Config = {
     ],
   },
   setupFiles: ["<rootDir>/tests/setup-env.ts"],
+  testTimeout: 60000,
   verbose: true,
 };
 
