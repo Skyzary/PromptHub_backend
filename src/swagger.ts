@@ -202,6 +202,41 @@ export const swaggerDocument = {
           },
         },
       },
+      PromptItem: {
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+            example: "66a26d708309cf8fcf650b2b",
+          },
+          title: {
+            type: "string",
+            example: "Code Review Assistant",
+          },
+          body: {
+            type: "string",
+            example: "Act as a Senior Engineer reviewing this code...",
+          },
+          tags: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            example: ["coding", "review"],
+          },
+        },
+      },
+      PromptsListResponse: {
+        type: "object",
+        properties: {
+          prompts: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/PromptItem",
+            },
+          },
+        },
+      },
     },
   },
   paths: {
@@ -466,6 +501,39 @@ export const swaggerDocument = {
               "application/json": {
                 schema: {
                   $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/prompts": {
+      get: {
+        tags: ["Prompts"],
+        summary: "Получение списка промптов текущего пользователя",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        responses: {
+          200: {
+            description: "Список промптов успешно получен",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/PromptsListResponse",
                 },
               },
             },
