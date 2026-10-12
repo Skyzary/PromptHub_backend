@@ -14,7 +14,7 @@
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "test": "NODE_OPTIONS=\"--experimental-vm-modules\" jest"
+    "test": "NODE_OPTIONS=\"--experimental-vm-modules\" jest --runInBand"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.10",
