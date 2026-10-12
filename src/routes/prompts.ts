@@ -82,6 +82,21 @@ promptsRouter.delete("/delete", protect, async (req, res) => {
   }
 });
 
+promptsRouter.delete("/delete/all", protect, async (req, res) => {
+  try {
+    const email = req.user!.email;
+    await promptService.deleteAllPrompts(email);
+    return res
+      .status(200)
+      .json({ message: "All prompts deleted successfully." });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to delete all prompts";
+    const status = message === "User not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
+  }
+});
+
 promptsRouter.patch("/change/body", protect, async (req, res) => {
   try {
     const email = req.user!.email;

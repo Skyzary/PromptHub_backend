@@ -17,6 +17,7 @@ export class PromptService {
   updatePromptBody: (updatePromptBodyBody: UpdatePromptBody) => Promise<void>; // Update the body of a prompt
   updatePromptTags: (updatePromptTagsBody: UpdatePromptTags) => Promise<void>; // Update the tags of a prompt
   deletePrompt: (deletePromptBody: DeletePrompt) => Promise<void>; // Delete a prompt
+  deleteAllPrompts: (email: string) => Promise<void>; // Delete all prompts of a user
   constructor() {
     this.getPrompts = async (email: string) => {
       if (!email) {
@@ -104,6 +105,17 @@ export class PromptService {
         throw new Error("Prompt not found.");
       }
       user.prompts = user.prompts.filter((p) => p._id?.toString() !== promptId);
+      await user.save();
+    };
+    this.deleteAllPrompts = async (email: string) => {
+      if (!email) {
+        throw new Error("Email is required.");
+      }
+      const user = await userModel.findOne({ email });
+      if (!user) {
+        throw new Error("User not found.");
+      }
+      user.prompts = [];
       await user.save();
     };
   }

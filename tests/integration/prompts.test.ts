@@ -194,5 +194,38 @@ describe("Prompts Routes (/api/prompts)", () => {
       const dbUser = await userModel.findOne({ email: user.email });
       expect(dbUser?.prompts).toHaveLength(0);
     });
+
+    it("should delete all prompts of the user via DELETE /api/prompts/delete/all", async () => {
+      // Create a second prompt
+      await request(app)
+        .post("/api/prompts/create")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "Second Prompt",
+          body: "Second prompt body",
+          tags: ["extra"],
+        });
+
+      let dbUser = await userModel.findOne({ email: user.email });
+      expect(dbUser?.prompts).toHaveLength(2);
+
+      const res = await request(app)
+        .delete("/api/prompts/delete/all")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty(
+        "message",
+        "All prompts deleted successfully.",
+      );
+
+      dbUser = await userModel.findOne({ email: user.email });
+      expect(dbUser?.prompts).toHaveLength(0);
+    });
+
+    it("should return 401 when unauthorized on delete all prompts", async () => {
+      const res = await request(app).delete("/api/prompts/delete/all");
+      expect(res.status).toBe(401);
+    });
   });
 });
