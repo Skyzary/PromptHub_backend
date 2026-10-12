@@ -947,5 +947,38 @@ export const swaggerDocument = {
         },
       },
     },
+    "/api/prompts/delete/all": {
+      delete: {
+        tags: ["Prompts"],
+        summary: "Удаление всех промптов текущего пользователя",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        responses: {
+          200: {
+            description: "Все промпты успешно удалены",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/MessageResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
 };
