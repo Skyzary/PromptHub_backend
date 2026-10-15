@@ -39,10 +39,10 @@ jobs:
         with:
           version: 10
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
 
       - name: Determine Backend Directory
@@ -71,7 +71,12 @@ jobs:
 
       - name: Run tests
         working-directory: ${{ steps.set-dir.outputs.BACKEND_DIR }}
-        run: npm test --if-present
+        run: |
+          if command -v pnpm &> /dev/null && [ -f "pnpm-lock.yaml" ]; then
+            pnpm test
+          else
+            npm test --if-present
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
