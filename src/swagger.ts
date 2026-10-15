@@ -189,6 +189,10 @@ export const swaggerDocument = {
             },
             example: ["coding", "review", "typescript"],
           },
+          icon: {
+            type: "string",
+            example: "code-icon",
+          },
         },
       },
       PromptUpdateTitleRequest: {
@@ -236,6 +240,20 @@ export const swaggerDocument = {
           },
         },
       },
+      PromptUpdateIconRequest: {
+        type: "object",
+        required: ["promptId", "icon"],
+        properties: {
+          promptId: {
+            type: "string",
+            example: "66a26d708309cf8fcf650b2b",
+          },
+          icon: {
+            type: "string",
+            example: "code-icon",
+          },
+        },
+      },
       PromptDeleteRequest: {
         type: "object",
         required: ["promptId"],
@@ -267,6 +285,10 @@ export const swaggerDocument = {
               type: "string",
             },
             example: ["coding", "review"],
+          },
+          icon: {
+            type: "string",
+            example: "code-icon",
           },
         },
       },
@@ -883,6 +905,69 @@ export const swaggerDocument = {
           },
           401: {
             description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/prompts/change/icon": {
+      patch: {
+        tags: ["Prompts"],
+        summary: "Изменение иконки промпта",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/PromptUpdateIconRequest",
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: "Иконка промпта успешно обновлена",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/MessageResponse",
+                },
+              },
+            },
+          },
+          400: {
+            description: "Ошибка валидации",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          404: {
+            description: "Промпт не найден",
             content: {
               "application/json": {
                 schema: {

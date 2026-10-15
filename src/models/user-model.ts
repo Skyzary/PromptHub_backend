@@ -9,6 +9,7 @@ const userSchema = new Schema<IUser>({
     {
       title: { type: String, required: true },
       body: { type: String, required: true },
+      icon: { type: String, required: false },
       createdAt: { type: Date, required: true, default: Date.now },
       tags: { type: [{ type: String }], required: false },
       updatedAt: { type: Date, required: true, default: Date.now },

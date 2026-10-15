@@ -3,6 +3,7 @@ import type {
   UpdatePromptBody,
   UpdatePromptTitle,
   UpdatePromptTags,
+  UpdatePromptIcon,
   DeletePrompt,
   IPrompt,
 } from "../types/prompt.types.ts";
@@ -87,6 +88,25 @@ export class PromptService {
       throw new Error("Prompt not found.");
     }
     prompt.tags = tags;
+    await user.save();
+  }
+
+  async updatePromptIcon(
+    updatePromptIconData: UpdatePromptIcon,
+  ): Promise<void> {
+    const { email, promptId, icon } = updatePromptIconData;
+    if (!email || !promptId || !icon) {
+      throw new Error("Prompt ID, email and icon are required.");
+    }
+    const user = await userModel.findOne({ email });
+    if (!user || !user.prompts) {
+      throw new Error("User or prompts not found.");
+    }
+    const prompt = user.prompts.find((p) => p._id?.toString() === promptId);
+    if (!prompt) {
+      throw new Error("Prompt not found.");
+    }
+    prompt.icon = icon;
     await user.save();
   }
 
