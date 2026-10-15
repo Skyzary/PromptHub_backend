@@ -33,4 +33,3 @@ async function runMigration(): Promise<void> {
 }
 
 void runMigration();
-
