@@ -4,6 +4,7 @@ export interface CreatePromptBody {
   title: string;
   body: string;
   tags: Array<string>;
+  icon?: string | undefined;
   updatedAt?: Date;
   createdAt?: Date;
 }
@@ -22,6 +23,11 @@ export interface UpdatePromptTags {
   promptId: string;
   tags: Array<string>;
 }
+export interface UpdatePromptIcon {
+  email: string;
+  promptId: string;
+  icon: string;
+}
 export interface DeletePrompt {
   email: string;
   promptId: string;
@@ -30,6 +36,7 @@ export interface IPrompt {
   _id?: Types.ObjectId; // появляется после сохранения, при create ещё нет
   title: string;
   body: string;
+  icon?: string | undefined;
   createdAt?: Date;
   tags: Array<string>;
 }

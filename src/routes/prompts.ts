@@ -6,6 +6,7 @@ import {
   updatePromptTitleSchema,
   updatePromptBodySchema,
   updatePromptTagsSchema,
+  updatePromptIconSchema,
   deletePromptSchema,
 } from "../validation/prompt-validation.ts";
 
@@ -32,8 +33,8 @@ promptsRouter.post("/create", protect, async (req, res) => {
       return res.status(400).json({ error: validation.error.message });
     }
 
-    const { title, body, tags } = validation.data;
-    await promptService.createPrompt({ email, title, body, tags });
+    const { title, body, tags, icon } = validation.data;
+    await promptService.createPrompt({ email, title, body, tags, icon });
     return res.status(201).json({ message: "Prompt created successfully." });
   } catch (error) {
     const message =
@@ -134,6 +135,27 @@ promptsRouter.patch("/change/tags", protect, async (req, res) => {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to update prompt tags";
+    const status = message === "Prompt not found." ? 404 : 400;
+    return res.status(status).json({ error: message });
+  }
+});
+
+promptsRouter.patch("/change/icon", protect, async (req, res) => {
+  try {
+    const email = req.user!.email;
+    const validation = updatePromptIconSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({ error: validation.error.message });
+    }
+
+    const { promptId, icon } = validation.data;
+    await promptService.updatePromptIcon({ email, promptId, icon });
+    return res
+      .status(200)
+      .json({ message: "Prompt icon updated successfully." });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to update prompt icon";
     const status = message === "Prompt not found." ? 404 : 400;
     return res.status(status).json({ error: message });
   }
