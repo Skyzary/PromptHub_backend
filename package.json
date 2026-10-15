@@ -14,6 +14,7 @@
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
+    "migrate:prompt-icon": "node -r dotenv/config --import tsx/esm src/migrations/add-prompt-icon.ts",
     "test": "NODE_OPTIONS=\"--experimental-vm-modules\" jest --runInBand"
   },
   "dependencies": {
