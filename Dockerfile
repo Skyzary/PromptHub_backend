@@ -26,8 +26,9 @@ ENV NODE_ENV=production
 
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
-COPY package.json ./
+ARG PORT=4300
+ENV PORT=${PORT}
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD ["node", "dist/index.js"]

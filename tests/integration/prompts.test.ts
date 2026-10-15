@@ -29,6 +29,63 @@ describe("Prompts Routes (/api/prompts)", () => {
     return loginRes.body.accessToken;
   };
 
+  describe("GET /api/prompts", () => {
+    it("should return prompts for authenticated user", async () => {
+      const token = await getAuthToken();
+
+      // Create a prompt first
+      await request(app)
+        .post("/api/prompts/create")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "My Prompt",
+          body: "Act as a software engineer...",
+          tags: ["tech", "coding"],
+        });
+
+      const res = await request(app)
+        .get("/api/prompts")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("prompts");
+      expect(res.body.prompts).toHaveLength(1);
+      expect(res.body.prompts[0]).toHaveProperty("title", "My Prompt");
+      expect(res.body.prompts[0]).toHaveProperty(
+        "body",
+        "Act as a software engineer...",
+      );
+      expect(res.body.prompts[0].tags).toEqual(["tech", "coding"]);
+    });
+
+    it("should return prompts with icon for authenticated user", async () => {
+      const token = await getAuthToken();
+
+      await request(app)
+        .post("/api/prompts/create")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "Prompt with Icon",
+          body: "Act as a software engineer...",
+          tags: ["tech"],
+          icon: "code-icon",
+        });
+
+      const res = await request(app)
+        .get("/api/prompts")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.prompts).toHaveLength(1);
+      expect(res.body.prompts[0]).toHaveProperty("icon", "code-icon");
+    });
+
+    it("should return 401 when token is missing", async () => {
+      const res = await request(app).get("/api/prompts");
+      expect(res.status).toBe(401);
+    });
+  });
+
   describe("POST /api/prompts/create", () => {
     it("should create a prompt for authenticated user", async () => {
       const token = await getAuthToken();
@@ -51,6 +108,47 @@ describe("Prompts Routes (/api/prompts)", () => {
       const updatedUser = await userModel.findOne({ email: user.email });
       expect(updatedUser?.prompts).toHaveLength(1);
       expect(updatedUser?.prompts?.[0]?.title).toBe("My Prompt");
+    });
+
+    it("should create a prompt with icon for authenticated user", async () => {
+      const token = await getAuthToken();
+
+      const res = await request(app)
+        .post("/api/prompts/create")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "Prompt with Icon",
+          body: "Act as a designer...",
+          tags: ["design", "ui"],
+          icon: "sparkles-icon-id",
+        });
+
+      expect(res.status).toBe(201);
+      expect(res.body).toHaveProperty(
+        "message",
+        "Prompt created successfully.",
+      );
+
+      const updatedUser = await userModel.findOne({ email: user.email });
+      expect(updatedUser?.prompts).toHaveLength(1);
+      expect(updatedUser?.prompts?.[0]?.title).toBe("Prompt with Icon");
+      expect(updatedUser?.prompts?.[0]?.icon).toBe("sparkles-icon-id");
+    });
+
+    it("should return 400 when icon is not a string", async () => {
+      const token = await getAuthToken();
+
+      const res = await request(app)
+        .post("/api/prompts/create")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "Invalid Icon Prompt",
+          body: "Act as a software engineer...",
+          tags: ["tech"],
+          icon: 12345,
+        });
+
+      expect(res.status).toBe(400);
     });
 
     it("should return 401 when token is missing", async () => {
@@ -142,6 +240,51 @@ describe("Prompts Routes (/api/prompts)", () => {
       expect(dbUser?.prompts?.[0]?.tags).toEqual(["new-tag", "updated"]);
     });
 
+    it("should update prompt icon", async () => {
+      const res = await request(app)
+        .patch("/api/prompts/change/icon")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          promptId,
+          icon: "new-sparkles-icon",
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty(
+        "message",
+        "Prompt icon updated successfully.",
+      );
+
+      const dbUser = await userModel.findOne({ email: user.email });
+      expect(dbUser?.prompts?.[0]?.icon).toBe("new-sparkles-icon");
+    });
+
+    it("should return 400 when updating icon with empty value", async () => {
+      const res = await request(app)
+        .patch("/api/prompts/change/icon")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          promptId,
+          icon: "",
+        });
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 404 when updating icon of non-existent prompt", async () => {
+      const nonExistentId = "507f1f77bcf86cd799439011";
+      const res = await request(app)
+        .patch("/api/prompts/change/icon")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          promptId: nonExistentId,
+          icon: "new-icon",
+        });
+
+      expect(res.status).toBe(404);
+      expect(res.body).toHaveProperty("error", "Prompt not found.");
+    });
+
     it("should delete prompt", async () => {
       const res = await request(app)
         .delete("/api/prompts/delete")
@@ -158,6 +301,39 @@ describe("Prompts Routes (/api/prompts)", () => {
 
       const dbUser = await userModel.findOne({ email: user.email });
       expect(dbUser?.prompts).toHaveLength(0);
+    });
+
+    it("should delete all prompts of the user via DELETE /api/prompts/delete/all", async () => {
+      // Create a second prompt
+      await request(app)
+        .post("/api/prompts/create")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "Second Prompt",
+          body: "Second prompt body",
+          tags: ["extra"],
+        });
+
+      let dbUser = await userModel.findOne({ email: user.email });
+      expect(dbUser?.prompts).toHaveLength(2);
+
+      const res = await request(app)
+        .delete("/api/prompts/delete/all")
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty(
+        "message",
+        "All prompts deleted successfully.",
+      );
+
+      dbUser = await userModel.findOne({ email: user.email });
+      expect(dbUser?.prompts).toHaveLength(0);
+    });
+
+    it("should return 401 when unauthorized on delete all prompts", async () => {
+      const res = await request(app).delete("/api/prompts/delete/all");
+      expect(res.status).toBe(401);
     });
   });
 });

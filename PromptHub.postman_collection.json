@@ -7,8 +7,12 @@
   },
   "variable": [
     {
+      "key": "port",
+      "value": "4300"
+    },
+    {
       "key": "baseUrl",
-      "value": "http://localhost:3000"
+      "value": "http://localhost:{{port}}"
     },
     {
       "key": "accessToken",
@@ -228,6 +232,20 @@
       },
       "item": [
         {
+          "name": "Get Prompts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/prompts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prompts"]
+            },
+            "description": "Получение всех промптов текущего пользователя. Требует Authorization: Bearer {{accessToken}}."
+          },
+          "response": []
+        },
+        {
           "name": "Create Prompt",
           "request": {
             "method": "POST",
@@ -316,6 +334,29 @@
               "path": ["api", "prompts", "change", "tags"]
             },
             "description": "Обновление тегов промпта."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Prompt Icon",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"promptId\": \"{{promptId}}\",\n  \"icon\": \"sparkles\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prompts/change/icon",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prompts", "change", "icon"]
+            },
+            "description": "Обновление иконки промпта."
           },
           "response": []
         },

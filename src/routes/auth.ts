@@ -65,7 +65,7 @@ authRouter.post("/login", async (req, res) => {
 
 authRouter.post("/refresh", async (req, res) => {
   try {
-    const refreshToken = req.cookies?.refreshToken;
+    const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
     if (!refreshToken) {
       return res.status(401).json({ error: "Refresh token is required." });
     }

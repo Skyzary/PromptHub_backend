@@ -126,6 +126,50 @@ export const swaggerDocument = {
           },
         },
       },
+      UserItem: {
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+            example: "66a26d708309cf8fcf650b2a",
+          },
+          email: {
+            type: "string",
+            format: "email",
+            example: "user@example.com",
+          },
+          registeredAt: {
+            type: "string",
+            format: "date-time",
+            example: "2026-07-24T12:00:00.000Z",
+          },
+          prompts: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/PromptItem",
+            },
+          },
+        },
+      },
+      UserResponse: {
+        type: "object",
+        properties: {
+          user: {
+            $ref: "#/components/schemas/UserItem",
+          },
+        },
+      },
+      UsersListResponse: {
+        type: "object",
+        properties: {
+          users: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/UserItem",
+            },
+          },
+        },
+      },
       PromptCreateRequest: {
         type: "object",
         required: ["title", "body", "tags"],
@@ -144,6 +188,10 @@ export const swaggerDocument = {
               type: "string",
             },
             example: ["coding", "review", "typescript"],
+          },
+          icon: {
+            type: "string",
+            example: "code-icon",
           },
         },
       },
@@ -192,6 +240,20 @@ export const swaggerDocument = {
           },
         },
       },
+      PromptUpdateIconRequest: {
+        type: "object",
+        required: ["promptId", "icon"],
+        properties: {
+          promptId: {
+            type: "string",
+            example: "66a26d708309cf8fcf650b2b",
+          },
+          icon: {
+            type: "string",
+            example: "code-icon",
+          },
+        },
+      },
       PromptDeleteRequest: {
         type: "object",
         required: ["promptId"],
@@ -199,6 +261,45 @@ export const swaggerDocument = {
           promptId: {
             type: "string",
             example: "66a26d708309cf8fcf650b2b",
+          },
+        },
+      },
+      PromptItem: {
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+            example: "66a26d708309cf8fcf650b2b",
+          },
+          title: {
+            type: "string",
+            example: "Code Review Assistant",
+          },
+          body: {
+            type: "string",
+            example: "Act as a Senior Engineer reviewing this code...",
+          },
+          tags: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            example: ["coding", "review"],
+          },
+          icon: {
+            type: "string",
+            example: "code-icon",
+          },
+        },
+      },
+      PromptsListResponse: {
+        type: "object",
+        properties: {
+          prompts: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/PromptItem",
+            },
           },
         },
       },
@@ -345,6 +446,37 @@ export const swaggerDocument = {
       },
     },
     "/api/users": {
+      get: {
+        tags: ["Users"],
+        summary: "Получение списка всех пользователей",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        responses: {
+          200: {
+            description: "Список пользователей успешно получен",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UsersListResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
       delete: {
         tags: ["Users"],
         summary: "Удаление текущего пользователя",
@@ -466,6 +598,95 @@ export const swaggerDocument = {
               "application/json": {
                 schema: {
                   $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/users/{email}": {
+      get: {
+        tags: ["Users"],
+        summary: "Получение конкретного пользователя по email",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        parameters: [
+          {
+            name: "email",
+            in: "path",
+            required: true,
+            description: "Email пользователя",
+            schema: {
+              type: "string",
+              format: "email",
+              example: "user@example.com",
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: "Пользователь успешно получен",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UserResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          404: {
+            description: "Пользователь не найден",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/prompts": {
+      get: {
+        tags: ["Prompts"],
+        summary: "Получение списка промптов текущего пользователя",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        responses: {
+          200: {
+            description: "Список промптов успешно получен",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/PromptsListResponse",
                 },
               },
             },
@@ -695,6 +916,69 @@ export const swaggerDocument = {
         },
       },
     },
+    "/api/prompts/change/icon": {
+      patch: {
+        tags: ["Prompts"],
+        summary: "Изменение иконки промпта",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/PromptUpdateIconRequest",
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: "Иконка промпта успешно обновлена",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/MessageResponse",
+                },
+              },
+            },
+          },
+          400: {
+            description: "Ошибка валидации",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          404: {
+            description: "Промпт не найден",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/api/prompts/delete": {
       delete: {
         tags: ["Prompts"],
@@ -731,6 +1015,39 @@ export const swaggerDocument = {
               "application/json": {
                 schema: {
                   $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          401: {
+            description: "Не авторизован",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/prompts/delete/all": {
+      delete: {
+        tags: ["Prompts"],
+        summary: "Удаление всех промптов текущего пользователя",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        responses: {
+          200: {
+            description: "Все промпты успешно удалены",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/MessageResponse",
                 },
               },
             },
